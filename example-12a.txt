@@ -1,0 +1,3 @@
+cpy 10 a
+dec a
+jnz a -1
