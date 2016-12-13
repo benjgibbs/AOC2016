@@ -96,7 +96,7 @@ class AoC13b {
   } 
 
   public static void main(String[] args) {
-    new AoC13a().run();
+    new AoC13b().run();
   }
   
   final class Node {
