@@ -31,7 +31,7 @@ class AoC13b {
         break;
       }
     }
-    //print(15);
+    print(50);
     int count = 0;
     for (int i = 0; i < mins.length; i++) {
       for (int j = 0; j < mins[i].length; j++) {

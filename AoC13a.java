@@ -11,7 +11,6 @@ class AoC13a {
   void run() {
     initMins();
     mins[1][1] = 0;
-    print(15);
 
     //final int X = 7, Y = 4;
     final int X = 31, Y = 39;
@@ -33,7 +32,7 @@ class AoC13a {
         break;
       }
     }
-    print(15);
+    print(40);
   }
 
   void checkedAdd(Set<Node> result, Node toAdd) {
