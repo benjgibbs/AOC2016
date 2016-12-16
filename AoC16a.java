@@ -3,29 +3,26 @@ import java.util.*;
 class AoC16a {
 
   static String dragonCurve(int length, String s0) {
-    String result = s0;
-
-    while (result.length() < length) {
-      StringBuilder b = new StringBuilder(result);
-      b.reverse();
-      StringBuilder res = new StringBuilder(result);
-      res.append("0");
-      for (Character c : b.toString().toCharArray()) {
-        if (c == '0') {
-          res.append('1');
+    while (s0.length() < length) {
+      StringBuilder sb = new StringBuilder(s0);
+      sb.append("0");
+      char[] cs = s0.toCharArray();
+      for (int i = cs.length - 1; i >= 0; i--) {
+        if (cs[i] == '0') {
+          sb.append('1');
         } else {
-          res.append('0');
+          sb.append('0');
         }
       }
-      result = res.toString();
+      s0 = sb.toString();
     }
-    return result.substring(0, length); 
+    return s0.substring(0, length); 
   }
 
   static String checksum(String s1) {
     while (s1.length() % 2 == 0) {
       StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < s1.length() -1; i+=2) {
+      for (int i = 0; i < s1.length()-1; i+=2) {
         if (s1.charAt(i) == s1.charAt(i+1)) {
           sb.append("1");
         } else {
@@ -37,16 +34,15 @@ class AoC16a {
     return s1;
   }
 
-  public static void main(String[] args) {
-    System.out.println("Starting...");
-    //int length = 20;
-    //int length = 272;
-    int length = 35651584;
-    //String s0 = "10000";
-    String s0 = "10111011111001111";
+  static void run(int l, String s0) {
+    String s1 = dragonCurve(l, s0);
+    System.out.println("Checksum:" + checksum(s1));
+  }
 
-    String s1 = dragonCurve(length, s0);
-    //System.out.println("s1="+s1);
-    System.out.println("CheckSum:" +  checksum(s1));
+  public static void main(String[] args) {
+    System.out.println("Given:   01100");
+    run(20, "10000");
+    run(272, "10111011111001111");
+    run(35651584, "10111011111001111");
   }
 }
