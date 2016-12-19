@@ -7,29 +7,35 @@ class AoC19b {
     run(3014603);
   }
 
+  static class Elf {
+    final int id;
+    Elf n;
+    Elf(int id) { this.id = id; } 
+  }
+
   static void run(int ne) { 
-    List<Integer> elves = new ArrayList<Integer>();
-    
-    for (int i = 1; i <= ne; i++){
-      elves.add(i);
+    Elf h = new Elf(1);
+    Elf n = h;
+    Elf m  = null;
+    for (int i = 2; i <= ne; i++){
+      n.n = new Elf(i);
+      if (i == ne/2) {
+        m = n.n;
+      }
+      n = n.n;
     }
-    
-    int pi = 0; 
-    while (elves.size() > 1) {
-      //System.out.println("Elves: " + elves);
-      int i = elves.get(pi);
-      int pj = (pi + elves.size()/2) % elves.size();
-      int j = elves.get(pj); 
-
-      elves.remove(pj);
-      //System.out.println(i + " steals from " + j);
-      if (elves.size() == 1)  break;
-      if (elves.size() % 10000 == 0) System.out.print(".");
-      do {
-        pi = (pi + 1) % elves.size();
-      } while(i == elves.get(pi));
+    n.n = h;
+   
+    n = h; 
+    int count = 0;
+    while (n.n != n) {
+      m.n = m.n.n;
+      if (count++ % 2 == 0) {
+        m = m.n;
+      }
+      n = n.n;
     }
 
-    System.out.println("\n" + elves.get(0) + " has all the presents");
+    System.out.println("\n" + n.id + " has all the presents");
   }
 }
