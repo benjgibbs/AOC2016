@@ -1,6 +1,9 @@
 import java.util.*;
 
 class AoC22b {
+
+  static boolean isLogging  = false;
+  
   final static class Node {
     final int x;
     final int y;
@@ -38,8 +41,6 @@ class AoC22b {
     }
   }
   
-  static boolean isLogging  = false;
-  
   static void log(String msg) {
     if (isLogging){
       System.out.println(msg);
@@ -58,6 +59,20 @@ class AoC22b {
     System.out.println();
   }
   
+  static void printSymbols(List<Node> nodes, int xLen, int yLen){
+    for (int y = 0; y < yLen; y++){
+      for (int x = 0; x < xLen; x++) {
+        Node n = nodes.get(x * yLen + y);
+        if (n.size == n.avail) System.out.print("_");
+        else if (n.size > 100) System.out.print("#");
+        else System.out.print(".");
+        
+      }
+      System.out.println();
+    }
+    System.out.println();
+  }
+  
   static List<Node> move(List<Node> nodes, int spos, int dpos){
     List<Node> nn = new ArrayList<>(nodes);
     Node s = nodes.get(spos);
@@ -67,7 +82,6 @@ class AoC22b {
     nn.set(spos, new Node(s.x, s.y, s.size, 0, s.size, false));
     return nn;
   }
-  
   
   static List<List<Node>> moves(Set<List<Node>> seen, List<Node> nodes, Node n, int yLen){ 
     List<List<Node>> result = new ArrayList<>();
@@ -80,6 +94,7 @@ class AoC22b {
       if (!seen.contains(nn)) {
         log("Moving up: " + n.pos() + " to " + nodes.get(dpos).pos());
         result.add(nn);
+        seen.add(nn);
       }
     }
     
@@ -89,6 +104,7 @@ class AoC22b {
       if (!seen.contains(nn)) {
         log("Moving down: " + n.pos() + " to " + nodes.get(dpos).pos());
         result.add(nn);
+        seen.add(nn);
       }
     }
     
@@ -98,6 +114,7 @@ class AoC22b {
       if (!seen.contains(nn)) {
         log("Moving left: " + n.pos() + " to " + nodes.get(dpos).pos());
         result.add(nn);
+        seen.add(nn);
       }
     }
     
@@ -107,6 +124,7 @@ class AoC22b {
       if (!seen.contains(nn)) {
         log("Moving right: " + n.pos() + " to " + nodes.get(dpos).pos());
         result.add(nn);
+        seen.add(nn);
       }
     }
     return result;
@@ -129,7 +147,10 @@ class AoC22b {
     
     nodes.get(maxX  * (maxY + 1)).isGoal = true;
     
-    //print(nodes, maxX+1, maxY+1);
+    int payload = nodes.get(maxX  * (maxY + 1)).used;
+    
+    print(nodes, maxX+1, maxY+1);
+    printSymbols(nodes, maxX+1, maxY+1);
  
     List<List<Node>> nxt = new ArrayList<>();
     nxt.add(nodes);
@@ -141,6 +162,14 @@ class AoC22b {
       List<List<Node>> nxt2 = new ArrayList<>();
       for (List<Node> nl : nxt){
         print(nl,maxX+1, maxY+1);
+        Node goal = null;
+        for (Node g : nodes){
+          if (g.isGoal) {
+            goal = g;
+            break;
+          }
+        }
+        
         for (Node n : nl){
           if (n.used > 0) {
             for (List<Node> toAdd : moves(seen, nl, n, maxY + 1)) {
@@ -157,7 +186,6 @@ class AoC22b {
         }
         log("---");
       }
-      seen.addAll(nxt);
       nxt = nxt2;
       System.out.println("Considered: " + seen.size() +  ". Num moves: " + count + ". Next set: " + nxt.size());
     } while(!nxt.isEmpty());
