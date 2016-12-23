@@ -4,8 +4,8 @@ import java.util.*;
 class AoC23b {
   
   List<Asm> prog = new ArrayList<>();
-  //int[] reg = new int[] { 12, 0, 0, 0 };
-  int[] reg = new int[] { 7, 0, 0, 0 };
+  int[] reg = new int[] { 12, 0, 0, 0 };
+  //int[] reg = new int[] { 7, 0, 0, 0 };
   int pc = 0; 
 
   public static void main(String[] args) {
@@ -51,13 +51,10 @@ class AoC23b {
 
   abstract class Asm1 implements Asm {
     int o;
-    String args;
-    Asm1(int o, String args) {
+    Asm1(int o) {
       this.o = o;
-      this.args = args;
     }
     Asm1(String o) {
-      this.args = o;
       this.o = offset(o);
     }
   }
@@ -91,8 +88,8 @@ class AoC23b {
   }
 
   class Inc extends Asm1 {
-    Inc(int o, String args) {
-      super(o, args);
+    Inc(int o) {
+      super(o);
     }
     Inc(String x) {
       super(x);
@@ -103,13 +100,13 @@ class AoC23b {
     }
 
     public Asm toggle() {
-      return new Dec(o, args);
+      return new Dec(o);
     }
   }
   
   class Dec extends Asm1 {
-    Dec(int x, String args) {
-      super(x, args);
+    Dec(int x) {
+      super(x);
     }
 
     Dec(String x) {
@@ -122,7 +119,7 @@ class AoC23b {
     }
 
     public Asm toggle() {
-      return new Inc(o, args);
+      return new Inc(o);
     }
   }
   
