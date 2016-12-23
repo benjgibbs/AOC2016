@@ -117,7 +117,7 @@ class AoC23b {
     }
 
     public int apply() {
-      reg[o]++;
+      reg[o]--;
       return pc + 1;
     }
 
@@ -184,7 +184,7 @@ class AoC23b {
 
     public int apply() {
       int i2 = pc + (di ? reg[i] : i);
-      if (i2 > prog.size()) { 
+      if (i2 >= prog.size()) { 
         return pc + 1;
       }
       prog.set(i2, prog.get(i2).toggle());
@@ -200,7 +200,6 @@ class AoC23b {
     while (pc < prog.size()) {
       Asm asm = prog.get(pc);
       pc = asm.apply();
-      System.out.println("Pc: " + pc + ", Regs: " + Arrays.toString(reg));
     }
     System.out.println("Pc: " + pc + ", Regs: " + Arrays.toString(reg));
   }
