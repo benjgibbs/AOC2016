@@ -6,10 +6,10 @@ import java.util.stream.*;
 class AoC24a {
   
   List<Character> maze = new ArrayList<>();
+  
   Map<Integer, List<Integer>> pos = new HashMap<>();
-  int X, Y;
-
-  int maxNum;
+  
+  int X, Y, maxNum;
 
   AoC24a() {
     try (Scanner scanner = new Scanner(System.in)) {
@@ -120,42 +120,60 @@ class AoC24a {
     System.out.println("Shortest path between: 0 and 1 is: " 
         + spath(pos.get(0), pos.get(1)));
 
-    int[][] paths = new int[maxNum+1][maxNum+1];
+    int[][] dists = new int[maxNum+1][maxNum+1];
 
     for (int n1 = 0; n1 <= maxNum; n1++) {
       for (int n2 = n1+1; n2 <= maxNum; n2++) {
         int sp = spath(pos.get(n1), pos.get(n2));
-        paths[n1][n2] = sp;
-        paths[n2][n1] = sp;
+        dists[n1][n2] = sp;
+        dists[n2][n1] = sp;
       }
     }
-    System.out.println(Arrays.deepToString(paths));
-    Set<Integer> toVisit = pos.keySet();
-    int len = 0, cur = 0;
-    toVisit.remove(0); 
-    System.out.println(toVisit);
-    while (!toVisit.isEmpty()) {
-      int m = Integer.MAX_VALUE;
-      int n = Integer.MAX_VALUE;
-      for (int i = 0; i < paths[cur].length; i++) {
-        if (cur != i && toVisit.contains(i)) {
-          int v = paths[cur][i];
-          if (v < m) {
-            m = v;
-            n = i;
-          }
-        }
+    System.out.println(Arrays.deepToString(dists));
+    int minPath = Integer.MAX_VALUE;
+    List<Integer> shortestPath = null; 
+    for (List<Integer> p : permute(of(maxNum+1))) {
+      p.add(0,0);
+      //p.add(0);
+      int len = 0;
+      for (int i = 0; i < p.size() - 1; i++) {
+        len += dists[p.get(i)][p.get(i+1)];
       }
-      System.out.println("min between " + cur + " and " + n + " is " + m);
-      cur = n;
-      len += m;
-      toVisit.remove(cur);
-      System.out.println("Len: " + len);
-      System.out.println("To visit: " + toVisit);
+      if (len < minPath) {
+        shortestPath = p;
+        minPath = len;
+      }
     }
-    System.out.println("Min path: " + len);
 
+    System.out.println("Min path: " + minPath + " taking " + shortestPath);
   }
+
+  List<List<Integer>> permute(List<Integer> p) {
+    List<List<Integer>> result = new ArrayList<>();
+    if (p.size() == 1) {
+      result.add(p);
+      return result;
+    }
+    for (int i = 0; i < p.size(); i++) {
+      List<Integer> l = new ArrayList<>(p);
+      int j = l.get(i);
+      l.remove(i);
+      for(List<Integer>  ls :  permute(l)) {
+        ls.add(j);
+        result.add(ls);
+      }
+    }
+    return result;
+  }
+
+  List<Integer> of(int m) {
+    List<Integer> result = new ArrayList<>();
+    for(int i = 1; i < m; i++) {
+      result.add(i);
+    }
+    return result;
+  }
+
   int min(int[] arr) {
     int m = Integer.MAX_VALUE;
     for (int i : arr) {
@@ -165,7 +183,6 @@ class AoC24a {
     }
     return m;
   }
-
 
   public static void main(String[] args) {
     new AoC24a().run();
